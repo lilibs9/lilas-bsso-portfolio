@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Countdown - Time Until Your Big Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Dramatic countdown aesthetic with bold typography */
+        :root {
+            --color-primary: #ff0080;
+            --color-secondary: #7928ca;
+            --color-accent: #ff4d4d;
+            --color-bg: #0a0a0a;
+            --color-card: #1a1a1a;
+            --color-text: #ffffff;
+            --font-display: 'Bebas Neue', cursive;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 128, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(121, 40, 202, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientMove 10s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Floating particles effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .countdown-container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Event title section */
+        .event-section {
+            margin-bottom: 3rem;
+        }
+
+        .event-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .event-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.02em;
+        }
+
+        .event-date {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        /* Countdown display */
+        .countdown-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .time-block {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .time-block:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+        }
+
+        .time-block:hover::before {
+            opacity: 0.1;
+        }
+
+        .time-number {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Custom event form */
+        .event-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .emoji-picker {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .emoji-option {
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .emoji-option:hover {
+            transform: scale(1.2);
+        }
+
+        .emoji-option.selected {
+            border-color: var(--color-primary);
+            background: rgba(255, 0, 128, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 128, 0.4);
+        }
+
+        /* Expired message */
+        .expired-message {
+            display: none;
+            font-family: var(--font-display);
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .expired-message.show {
+            display: block;
+        }
+
+        /* Share section */
+        .share-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .share-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .countdown-display {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .time-block {
+                padding: 2rem 1rem;
+            }
+
+            .time-number {
+                font-size: 3.5rem;
+            }
+
+            .event-title {
+                font-size: 3rem;
+            }
+
+            .event-form {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-display {
+                grid-template-columns: 1fr;
+            }
+
+            .emoji-picker {
+                gap: 0.5rem;
+            }
+
+            .emoji-option {
+                font-size: 2rem;
+            }
+        }
+
+        /* Hide/show sections */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="countdown-container">
+        <!-- Event Form (shown initially) -->
+        <div class="event-form" id="eventForm">
+            <h2 class="form-title">Create Your Countdown</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Event Name</label>
+                <input type="text" class="form-input" id="eventName" placeholder="My Awesome Event" value="New Year 2025">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Event Date & Time</label>
+                <input type="datetime-local" class="form-input" id="eventDateTime">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Choose an Emoji</label>
+                <div class="emoji-picker">
+                    <span class="emoji-option selected" data-emoji="🎉">🎉</span>
+                    <span class="emoji-option" data-emoji="🎂">🎂</span>
+                    <span class="emoji-option" data-emoji="💍">💍</span>
+                    <span class="emoji-option" data-emoji="🎓">🎓</span>
+                    <span class="emoji-option" data-emoji="✈️">✈️</span>
+                    <span class="emoji-option" data-emoji="🎄">🎄</span>
+                    <span class="emoji-option" data-emoji="🏆">🏆</span>
+                    <span class="emoji-option" data-emoji="🚀">🚀</span>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="startCountdown">Start Countdown</button>
+        </div>
+
+        <!-- Countdown Display (hidden initially) -->
+        <div id="countdownSection" class="hidden">
+            <div class="event-section">
+                <div class="event-emoji" id="displayEmoji">🎉</div>
+                <h1 class="event-title" id="displayTitle">New Year 2025</h1>
+                <p class="event-date" id="displayDate">-</p>
+            </div>
+
+            <div class="countdown-display" id="countdownDisplay">
+                <div class="time-block">
+                    <div class="time-number" id="days">00</div>
+                    <div class="time-label">Days</div>
+                </div>
+                <div class="time-block">
+                    <div class="time-number" id="hours">00</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-block">
+                    <div class="time-number" id="minutes">00</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-block">
+                    <div class="time-number" id="seconds">00</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            </div>
+
+            <div class="expired-message" id="expiredMessage">🎊 Event Time! 🎊</div>
+
+            <div class="share-section">
+                <div class="share-title">Share your countdown:</div>
+                <div class="share-buttons">
+                    <button class="share-btn" onclick="shareCountdown('twitter')">🐦 Twitter</button>
+                    <button class="share-btn" onclick="shareCountdown('facebook')">📘 Facebook</button>
+                    <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+                    <button class="share-btn" onclick="resetCountdown()">🔄 New Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let countdownInterval;
+        let targetDate;
+        let selectedEmoji = '🎉';
+
+        // DOM elements
+        const eventForm = document.getElementById('eventForm');
+        const countdownSection = document.getElementById('countdownSection');
+        const startBtn = document.getElementById('startCountdown');
+        const eventNameInput = document.getElementById('eventName');
+        const eventDateTimeInput = document.getElementById('eventDateTime');
+        
+        // Display elements
+        const displayEmoji = document.getElementById('displayEmoji');
+        const displayTitle = document.getElementById('displayTitle');
+        const displayDate = document.getElementById('displayDate');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const expiredMessage = document.getElementById('expiredMessage');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+
+        // Set default date to New Year 2025
+        const defaultDate = new Date('2025-01-01T00:00:00');
+        eventDateTimeInput.value = formatDateForInput(defaultDate);
+
+        function formatDateForInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // Emoji selection
+        document.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedEmoji = this.dataset.emoji;
+            });
+        });
+
+        // Start countdown
+        startBtn.addEventListener('click', () => {
+            const eventName = eventNameInput.value.trim() || 'My Event';
+            const eventDateTime = eventDateTimeInput.value;
+
+            if (!eventDateTime) {
+                alert('Please select a date and time!');
+                return;
+            }
+
+            targetDate = new Date(eventDateTime);
+            
+            // Update display
+            displayEmoji.textContent = selectedEmoji;
+            displayTitle.textContent = eventName;
+            displayDate.textContent = targetDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Show countdown, hide form
+            eventForm.classList.add('hidden');
+            countdownSection.classList.remove('hidden');
+
+            // Start the countdown
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        });
+
+        // Update countdown function
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownDisplay.classList.add('hidden');
+                expiredMessage.classList.add('show');
+                createConfetti();
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Reset countdown
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            eventForm.classList.remove('hidden');
+            countdownSection.classList.add('hidden');
+            countdownDisplay.classList.remove('hidden');
+            expiredMessage.classList.remove('show');
+        }
+
+        // Share functions
+        function shareCountdown(platform) {
+            const text = `Counting down to ${displayTitle.textContent}! ${selectedEmoji}`;
+            const url = window.location.href;
+
+            switch(platform) {
+                case 'twitter':
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+                    break;
+                case 'facebook':
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+                    break;
+            }
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        // Create confetti effect when countdown ends
+        function createConfetti() {
+            const colors = ['#ff0080', '#7928ca', '#ff4d4d', '#00f2fe', '#10b981'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.zIndex = '1000';
+                    confetti.style.animation = 'fall 3s linear forwards';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Add confetti fall animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
