@@ -9,7 +9,7 @@ A modern, responsive portfolio website showcasing my frontend development projec
 
 ## 🌐 Live Demo
 
-Visit my portfolio: [https://lilibs9.github.io/portfolio](https://lilibs.github.io/portfolio)
+Visit my portfolio: [https://lilibs9.github.io/lilas-bsso-portfolio](https://lilibs9.github.io/lilas-bsso-portfolio/)
 
 ## 📋 About
 
