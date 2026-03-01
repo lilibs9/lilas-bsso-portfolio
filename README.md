@@ -9,7 +9,7 @@ A modern, responsive portfolio website showcasing my frontend development projec
 
 ## 🌐 Live Demo
 
-Visit my portfolio: [https://yourusername.github.io/portfolio](https://yourusername.github.io/portfolio)
+Visit my portfolio: [https://lilibs9.github.io/portfolio](https://lilibs.github.io/portfolio)
 
 ## 📋 About
 
@@ -144,8 +144,7 @@ Each project showcases a unique aesthetic direction:
 
 **Lilas Bsso**
 - Email: lilas.it.services@gmail.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
-- GitHub: [@yourusername](https://github.com/yourusername)
+- GitHub: [@lilibs9](https://github.com/lilibs9)
 
 ## 📄 License
 
